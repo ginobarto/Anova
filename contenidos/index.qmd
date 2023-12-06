@@ -1,0 +1,9 @@
+---
+title: "Contenidos"
+---
+
+Acá podes escribir algo si querés.
+
+* [Dos poblaciones](dos_poblaciones.qmd)
+* [ANOVA para un criterio de clasificación](un_criterio.qmd)
+* [ANOVA para dos criterios de clasificación cruzados sin interacción](dos_criterios_aditivos.qmd)
