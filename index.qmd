@@ -35,7 +35,7 @@ toc: false
 :::
 
 ::: {.g-col-3 .g-col-sm-5}
-<img src="utils/imgs/logo.png" class="img-fluid"><img>
+<img src="img/anova_img.png" class="img-fluid"><img> 
 :::
 
 ::: {.g-col-1 .g-col-sm-0}
@@ -56,7 +56,7 @@ toc: false
 ### Nacho Evangelista
 
 * {{< fa envelope >}} &nbsp; [evangelistaignacio@gmail.com](mailto:evangelistaignacio@gmail.com)
-* {{< fa calendar >}} &nbsp; [Consultas: Martes 14:00|14:45](https://calendar.app.google/VgFTvneiTiXBJ7Xx6)
+* {{< fa    calendar >}} &nbsp; [Consultas: Martes 14:00|14:45](https://calendar.app.google/VgFTvneiTiXBJ7Xx6)
 
 :::
 
