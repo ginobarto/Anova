@@ -55,8 +55,8 @@ toc: false
 
 ### Cristina Cuesta
 
-<!--* {{< fa envelope >}} &nbsp; [evangelistaignacio@gmail.com](mailto:evangelistaignacio@gmail.com)
-* {{< fa    calendar >}} &nbsp; [Consultas: Martes 14:00|14:45](https://calendar.app.google/VgFTvneiTiXBJ7Xx6)-->
+{{< fa envelope >}} &nbsp; [ccuesta@fcecon.unr.edu.ar](mailto:ccuesta@fcecon.unr.edu.ar)
+<!--* {{< fa    calendar >}} &nbsp; [Consultas: Martes 14:00|14:45](https://calendar.app.google/VgFTvneiTiXBJ7Xx6)-->
 
 :::
 
@@ -64,7 +64,7 @@ toc: false
 
 ### Gino Bartolelli
 
-<!--* {{< fa envelope >}} &nbsp; [tomicapretto@gmail.com](mailto:tomicapretto@gmail.com)
-* {{< fa calendar >}} &nbsp; Consultas: Jueves 9:00-->
+{{< fa envelope >}} &nbsp; [gino.bartolelli@fcecon.unr.edu.ar](mailto:gino.bartolelli@fcecon.unr.edu.ar)
+<!--* {{< fa calendar >}} &nbsp; Consultas: Jueves 9:00-->
 :::
 :::

@@ -16,10 +16,18 @@ website:
       background: dark
       header: Contenidos
       contents:
-        - text: Titulo 1
+        - text: Comparación de dos promedios poblacionales
+          file: contenidos/dos_poblaciones.qmd
+        - text: Un criterio de clasificación
           file: contenidos/un_criterio.qmd
-        - text: Titulo 2
+        - text: Dos criterios de clasificación cruzados sin interacción
           file: contenidos/dos_criterios_aditivos.qmd
+        - text: Dos criterios de clasificación cruzados con interacción
+          file: contenidos/dos_criterios_int.qmd
+        - text: Dos o más criterios de clasificación anidados
+          file: contenidos/dos_criterios_anidados.qmd
+        - text: Clasificaciones anidadas y cruzadas
+          file: contenidos/anidadas_cruzadas.qmd        
 
 format:
   html:
