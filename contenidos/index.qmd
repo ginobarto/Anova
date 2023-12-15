@@ -2,8 +2,9 @@
 title: "Contenidos"
 ---
 
-Acá podes escribir algo si querés.
-
-* [Dos poblaciones](dos_poblaciones.qmd)
-* [ANOVA para un criterio de clasificación](un_criterio.qmd)
-* [ANOVA para dos criterios de clasificación cruzados sin interacción](dos_criterios_aditivos.qmd)
+* [Comparación de dos promedios poblacionales](dos_poblaciones.qmd)
+* [Un criterio de clasificación](un_criterio.qmd)
+* [Dos criterios de clasificación cruzados sin interacción](dos_criterios_aditivos.qmd)
+* [Dos criterios de clasificación cruzados con interacción](dos_criterios_int.qmd)
+* [Dos o más criterios de clasificación anidados](dos_criterios_anidados.qmd)
+* [Clasificaciones anidadas y cruzadas](anidadas_cruzadas.qmd)

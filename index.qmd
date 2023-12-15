@@ -21,8 +21,8 @@ toc: false
 ::: {.course-meta}
 {{< fa graduation-cap >}} &nbsp; Licenciatura en Estadística  
 {{< fa university >}}     &nbsp; Facultad de Ciencias Económicas y Estadística  (UNR)  
-{{< fa calendar-alt >}}   &nbsp; 1° Cuatrimestre 2023  
-{{< fa clock >}}   &nbsp; Lun -- 11:00 a 13:00 &nbsp; | &nbsp; Mié -- 7:00 a 9:00 &nbsp; | &nbsp; Vie -- 7:00 a 9:00
+<!--{{< fa calendar-alt >}}   &nbsp; 1° Cuatrimestre 2023-->
+<!--{{< fa clock >}}   &nbsp; Lun -- 11:00 a 13:00 &nbsp; | &nbsp; Mié -- 7:00 a 9:00 &nbsp; | &nbsp; Vie -- 7:00 a 9:00-->
 :::
 
 :::
@@ -53,18 +53,18 @@ toc: false
 
 ::: {.g-col-12 .g-col-sm-6}
 
-### Nacho Evangelista
+### Cristina Cuesta
 
-* {{< fa envelope >}} &nbsp; [evangelistaignacio@gmail.com](mailto:evangelistaignacio@gmail.com)
-* {{< fa    calendar >}} &nbsp; [Consultas: Martes 14:00|14:45](https://calendar.app.google/VgFTvneiTiXBJ7Xx6)
+<!--* {{< fa envelope >}} &nbsp; [evangelistaignacio@gmail.com](mailto:evangelistaignacio@gmail.com)
+* {{< fa    calendar >}} &nbsp; [Consultas: Martes 14:00|14:45](https://calendar.app.google/VgFTvneiTiXBJ7Xx6)-->
 
 :::
 
 ::: {.g-col-12 .g-col-sm-6}
 
-### Tomás Capretto
+### Gino Bartolelli
 
-* {{< fa envelope >}} &nbsp; [tomicapretto@gmail.com](mailto:tomicapretto@gmail.com)
-* {{< fa calendar >}} &nbsp; Consultas: Jueves 9:00
+<!--* {{< fa envelope >}} &nbsp; [tomicapretto@gmail.com](mailto:tomicapretto@gmail.com)
+* {{< fa calendar >}} &nbsp; Consultas: Jueves 9:00-->
 :::
 :::
