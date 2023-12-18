@@ -2,6 +2,13 @@
 title: "Comparación de dos promedios poblacionales"
 ---
 
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE, 
+                      comment = NA, fig.align = "center", out.width = "75%")
+```
+
+<div style="text-align: justify">
+
 Análisis comparativo en el que se presenta un **factor con dos niveles**. Cada nivel se refiere a una población diferente. El objetivo es comparar esas poblaciones en función de una **variable (respuesta) continua y gaussiana**.
 
 Los datos corresponden a una muestra de deportistas federados, de 18 a 22 años, que entrenan y compiten en distintos clubes de la ciudad de Rosario. Se desea conocer si en promedio los hombres tienden a realizar el "Test de Coordinación de 4 tramos de 10 metros cada uno" en menos tiempo (segundos) que las mujeres.
@@ -25,7 +32,7 @@ base <- read_excel("C:/Users/Usuario/Desktop/Facultad Flor/Anova/base_deportista
 head(base)
 ```
 
-En primer lugar, se debe evaluar el cumplimiento de normalidad en ambas poblaciones/muestra/grupos. Se puede comprobar gráficamente a partir de histogramas y también a través de la prueba de Shapiro-Wilks, en el cual se prueba $H_0) Y \sim \mathcal{N}(\mu,\sigma^2)$ versus $H_1) Y \nsim \mathcal{N}(\mu,\sigma^2)$. La variable respuesta *Y* representa el tiempo (en segundos) que tarda un deportista en realizar el test de coordinación.
+En primer lugar, se debe evaluar el cumplimiento de normalidad en ambas poblaciones/muestra/grupos. Se puede comprobar gráficamente a partir de histogramas y también a través de la prueba de Shapiro-Wilks, en el cual se prueba $H_0) \ Y \sim \mathcal{N}(\mu,\sigma^2)$ versus $H_1) \ Y \nsim \mathcal{N}(\mu,\sigma^2)$. La variable respuesta *Y* representa el tiempo (en segundos) que tarda un deportista en realizar el test de coordinación.
 
 ```{r, echo = FALSE}
 g1 <- base %>% ggplot(aes(coord)) + 
@@ -81,33 +88,33 @@ ggplot(base, aes(x = sexo, y = coord)) +
 
 Se puede observar que los tiempos en realizar el test de coordinación en mujeres son levemente mayores que los tiempos obtenidos por los varones. A continuación, se evaluará si esta diferencia es significativa.
 
-Antes de llevar a cabo la prueba de igualdad de medias, se debe chequear si las variancias entre grupos son iguales: $H_0) \sigma_F^2=\sigma_M^2$ versus $H_1) \sigma_F^2 \neq \sigma_M^2$.
+Antes de llevar a cabo la prueba de igualdad de medias, se debe chequear si las variancias entre grupos son iguales: $H_0) \ \sigma_F^2=\sigma_M^2$ versus $H_1) \ \sigma_F^2 \neq \sigma_M^2$.
 
 ```{r}
 # Test de igualdad de variancias
 var.test(coord ~ sexo, base, alternative = "two.sided")
 ```
 
-Se cumple la igualdad de variancias, por lo que se postula la prueba de igualdad de medias: $H_0) \mu_F=\mu_M$ versus $H_1) \mu_F > \mu_M$.
+Se cumple la igualdad de variancias, por lo que se postula la prueba de igualdad de medias: $H_0) \ \mu_F=\mu_M$ versus $H_1) \ \mu_F > \mu_M$.
 
--   1º enfoque: Prueba "t de student"
+-   1º enfoque: **Prueba "t de student"**
 
 ```{r}
 # Test de medias
 t.test(coord ~ sexo, base, alternative = "greater", var.equal = T)
 ```
 
--   2º enfoque: ANOVA
+-   2º enfoque: **ANOVA**
 
 Se postula el siguiente modelo de efectos fijos: $y_{ij} = \mu + \tau_i + e_{ij}, \ i=\overline{1,2} \ \land \ j=\overline{1,n_i}$, donde:
 
-    -   $y_{ij} =$ resultado del test de coordinación del deportista $j$ del grupo $i$.
+- $y_{ij}$ resultado del test de coordinación del deportista $j$ del grupo $i$.
 
-    -   $\mu =$ valor de referencia del test de coordinación.
+- $\mu =$ valor de referencia del test de coordinación.
 
-    -   $\tau_i =$ efecto grupo $i$.
+- $\tau_i =$ efecto grupo $i$.
 
-    -   $e_{ij} =$ error aleatorio del deportista $j$ del grupo $i$.
+- $e_{ij} =$ error aleatorio del deportista $j$ del grupo $i$.
 
 Además, $e_{ij} \sim \mathcal{N}(0,\sigma^2)$ *e independientes.*
 
@@ -120,3 +127,5 @@ summary(anova)
 ```
 
 Para ambos enfoques, se obtiene que en base a la evidencia muestral y con un nivel de significación del $5\%$, se rechaza la hipótesis nula, es decir, en promedio a las mujeres les lleva más tiempo realizar el test de coordinación que a los hombres.
+
+<div/>

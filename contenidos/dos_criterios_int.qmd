@@ -1,0 +1,129 @@
+---
+title: "Dos o más criterios de clasificación cruzados con interacción"
+---
+
+Análisis en el que se presentan dos **factores de clasificación (con dos o más niveles cada uno)**. El término *cruzado* indica que cada nivel de un factor puede combinarse con cada nivel del otro factor. El objetivo es conocer si estos factores influyen en el comportamiento de una **variable (respuesta) continua y gaussiana** a través de un **Análisis de la Variancia** (ANOVA).
+
+Steel y Torrie (1980, págs. 217-218) informaron datos (cortesía de A.c. Linnerud, Universidad Estatal de Carolina del Norte) sobre los tiempos (en segundos) para completar un recorrido de 1,5 millas. Todos los corredores eran hombres clasificados en tres grupos de edad y en tres categorías de fitness.
+
+-   Factor 1: Grupo etario (40-50-60)
+-   Factor 2: Categoría de fitness (baja-media-alta)
+
+```{r}
+# Librerías
+library(cowplot)
+library(tidyverse)
+library(agricolae)
+library(emmeans)
+```
+
+```{r, echo = FALSE}
+edad <- rep(c("40","50","60"),each=6)
+categoria <- rep(c("baja","media","alta"),each=2, times=3)
+tiempo <- c(669,671,602,603,527,547,775,821,684,687,571,573,1009,1060,824,828,688,713)
+
+base_fitness <- cbind(edad,categoria,tiempo)
+base_fitness <- as.data.frame(base_fitness)
+```
+
+```{r}
+head(base_fitness)
+```
+
+Se estudian medidas descriptivas y gráficos de boxplots y perfiles para los corredores según edad y categoría.
+
+```{r}
+# Medidas descriptivas
+base_fitness %>% 
+  group_by(edad, categoria) %>% 
+  summarise(
+    n = n(),
+    media = mean(tiempo),
+    desvio = sd(tiempo)
+  ) 
+```
+
+```{r}
+# Boxplots. Ojo! Sólo hay dos observaciones por grupo
+ggplot(base_fitness, aes(x = edad, y = tiempo)) +
+  stat_boxplot(geom = "errorbar", 
+               width = 0.2) +
+  facet_wrap(~categoria) +
+  geom_boxplot(fill = "#4271AE", colour = "#1F3552", 
+               alpha = 0.9) +
+  labs(y="Tiempo", x="Edad")
+
+```
+
+```{r}
+# Gráfico de perfiles (para evaluar interacción entre factores)
+base_fitness %>%
+  group_by(edad, categoria) %>% 
+    summarise(
+      media = mean(tiempo)
+    ) %>% 
+   ggplot(aes(x=edad,y=media,
+             group=categoria,
+             color=categoria)) +
+    geom_line() +
+    theme_bw() +
+    labs(y="Media", x="Edad",color="Categoria")
+```
+
+Se puede observar que los tiempos en realizar la prueba de 1.5 millas ...
+
+Se plantea el siguiente modelo de efectos fijos:\
+
+$y_{ijk} = \mu + \tau_i + \beta_j + (\tau \beta)_{ij} + e_{ijk}, \ i=\overline{1,3} \ \land \ j=\overline{1,3}\ \land \ k=\overline{1,2}$, donde:
+
+-   $y_{ijk}$: tiempo en realizar la prueba de 1.5 millas del $k-ésimo$ corredor con $i$ años de la categoría $j$.
+
+-   $\mu$: valor de referencia del tiempo en realizar la prueba de 1.5 millas.
+
+-   $\tau_i$: efecto edad $i$.
+
+-   $\beta_j$: efecto categoría $j$.
+
+-   $(\tau \beta)_{ij}$: efecto interacción entre el edad $i$ y el categoría $j$.
+
+-   $e_{ijk}$: error aleatorio del $k-ésimo$ corredor con $i$ años de la categoría $j$.
+
+Además, $e_{ijk} \sim \mathcal{N}(0,\sigma^2)$ *e independientes.*
+
+En este modelo, a través de la interacción, se postula que el efecto de la edad del corredor en el tiempo que tarda en alcanzar las 1.5 millas depende de su categoría.
+
+A continuación, se muestra la tabla ANOVA:
+
+```{r}
+# Tabla ANOVA
+anova <- aov(tiempo~edad*categoria, base_fitness)
+summary(anova)
+
+# Modelo estimado
+modelo <- lm(tiempo~edad*categoria, base_fitness)
+summary(modelo)
+```
+
+El test de hipótesis para responder al efecto interacción se plantea como: $H_0)$ No hay interacción versus $H_1)$ Hay interacción. Que no haya interacción es que el efecto edad es el mismo para cualquier categoría.
+
+En base a la evidencia muestral y con un nivel de significación del $5\%$, se rechaza la hipótesis nula, es decir, hay efecto interacción entre edad y categoría. El efecto de la edad sobre el cambio del tiempo en realizar las 1.5 millas de los corredores depende de la categoría en la que se encuentran.
+
+Como la interacción del modelo resultó significativa, no se prueban los efectos principales.
+
+# Comparaciones múltiples
+
+Para comparar los niveles de edad dentro de cada categoría y viceversa, planteamos las siguientes comparaciones:
+
+```{r}
+joint_tests(modelo, by = "edad")
+joint_tests(modelo, by = "categoria")
+
+emm_s.t <- emmeans(modelo, pairwise ~ edad | categoria)
+emm_s.t
+
+emm_s.t1 <- emmeans(modelo, pairwise ~ categoria | edad)
+emm_s.t1
+
+```
+
+El análisis se finaliza con la comprobación de los supuestos de normalidad, homocedasticidad e independencia.

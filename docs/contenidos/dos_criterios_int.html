@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Análisis de la Variancia</title>
+<title>Análisis de la Variancia - Dos o más criterios de clasificación cruzados con interacción</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -19,6 +19,40 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -67,6 +101,8 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 </head>
 
@@ -158,16 +194,356 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">En esta página</h2>
+   
+  <ul>
+  <li><a href="#comparaciones-múltiples" id="toc-comparaciones-múltiples" class="nav-link active" data-scroll-target="#comparaciones-múltiples">Comparaciones múltiples</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Dos o más criterios de clasificación cruzados con interacción</h1>
+</div>
 
 
 
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
 
 
+</header>
+
+
+<p>Análisis en el que se presentan dos <strong>factores de clasificación (con dos o más niveles cada uno)</strong>. El término <em>cruzado</em> indica que cada nivel de un factor puede combinarse con cada nivel del otro factor. El objetivo es conocer si estos factores influyen en el comportamiento de una <strong>variable (respuesta) continua y gaussiana</strong> a través de un <strong>Análisis de la Variancia</strong> (ANOVA).</p>
+<p>Steel y Torrie (1980, págs. 217-218) informaron datos (cortesía de A.c. Linnerud, Universidad Estatal de Carolina del Norte) sobre los tiempos (en segundos) para completar un recorrido de 1,5 millas. Todos los corredores eran hombres clasificados en tres grupos de edad y en tres categorías de fitness.</p>
+<ul>
+<li>Factor 1: Grupo etario (40-50-60)</li>
+<li>Factor 2: Categoría de fitness (baja-media-alta)</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Librerías</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(cowplot)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ dplyr     1.1.4     ✔ readr     2.1.4
+✔ forcats   1.0.0     ✔ stringr   1.5.1
+✔ ggplot2   3.4.4     ✔ tibble    3.2.1
+✔ lubridate 1.9.3     ✔ tidyr     1.3.0
+✔ purrr     1.0.2     
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter()    masks stats::filter()
+✖ dplyr::lag()       masks stats::lag()
+✖ lubridate::stamp() masks cowplot::stamp()
+ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(agricolae)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(emmeans)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(base_fitness)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  edad categoria tiempo
+1   40      baja    669
+2   40      baja    671
+3   40     media    602
+4   40     media    603
+5   40      alta    527
+6   40      alta    547</code></pre>
+</div>
+</div>
+<p>Se estudian medidas descriptivas y gráficos de boxplots y perfiles para los corredores según edad y categoría.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Medidas descriptivas</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>base_fitness <span class="sc">%&gt;%</span> </span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(edad, categoria) <span class="sc">%&gt;%</span> </span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">n =</span> <span class="fu">n</span>(),</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">media =</span> <span class="fu">mean</span>(tiempo),</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">desvio =</span> <span class="fu">sd</span>(tiempo)</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>  ) </span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: There were 9 warnings in `summarise()`.
+The first warning was:
+ℹ In argument: `media = mean(tiempo)`.
+ℹ In group 1: `edad = "40"`, `categoria = "alta"`.
+Caused by warning in `mean.default()`:
+! argument is not numeric or logical: returning NA
+ℹ Run `dplyr::last_dplyr_warnings()` to see the 8 remaining warnings.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`summarise()` has grouped output by 'edad'. You can override using the
+`.groups` argument.</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 9 × 5
+# Groups:   edad [3]
+  edad  categoria     n media desvio
+  &lt;chr&gt; &lt;chr&gt;     &lt;int&gt; &lt;dbl&gt;  &lt;dbl&gt;
+1 40    alta          2    NA 14.1  
+2 40    baja          2    NA  1.41 
+3 40    media         2    NA  0.707
+4 50    alta          2    NA  1.41 
+5 50    baja          2    NA 32.5  
+6 50    media         2    NA  2.12 
+7 60    alta          2    NA 17.7  
+8 60    baja          2    NA 36.1  
+9 60    media         2    NA  2.83 </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Boxplots. Ojo! Sólo hay dos observaciones por grupo</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(base_fitness, <span class="fu">aes</span>(<span class="at">x =</span> edad, <span class="at">y =</span> tiempo)) <span class="sc">+</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_boxplot</span>(<span class="at">geom =</span> <span class="st">"errorbar"</span>, </span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>               <span class="at">width =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>categoria) <span class="sc">+</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">fill =</span> <span class="st">"#4271AE"</span>, <span class="at">colour =</span> <span class="st">"#1F3552"</span>, </span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>               <span class="at">alpha =</span> <span class="fl">0.9</span>) <span class="sc">+</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y=</span><span class="st">"Tiempo"</span>, <span class="at">x=</span><span class="st">"Edad"</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="dos_criterios_int_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Gráfico de perfiles (para evaluar interacción entre factores)</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>base_fitness <span class="sc">%&gt;%</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(edad, categoria) <span class="sc">%&gt;%</span> </span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarise</span>(</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>      <span class="at">media =</span> <span class="fu">mean</span>(tiempo)</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">%&gt;%</span> </span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>   <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>edad,<span class="at">y=</span>media,</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>             <span class="at">group=</span>categoria,</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>             <span class="at">color=</span>categoria)) <span class="sc">+</span></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">y=</span><span class="st">"Media"</span>, <span class="at">x=</span><span class="st">"Edad"</span>,<span class="at">color=</span><span class="st">"Categoria"</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: There were 9 warnings in `summarise()`.
+The first warning was:
+ℹ In argument: `media = mean(tiempo)`.
+ℹ In group 1: `edad = "40"`, `categoria = "alta"`.
+Caused by warning in `mean.default()`:
+! argument is not numeric or logical: returning NA
+ℹ Run `dplyr::last_dplyr_warnings()` to see the 8 remaining warnings.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`summarise()` has grouped output by 'edad'. You can override using the
+`.groups` argument.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Removed 9 rows containing missing values (`geom_line()`).</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="dos_criterios_int_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Se puede observar que los tiempos en realizar la prueba de 1.5 millas …</p>
+<p>Se plantea el siguiente modelo de efectos fijos:<br>
+</p>
+<p><span class="math inline">\(y_{ijk} = \mu + \tau_i + \beta_j + (\tau \beta)_{ij} + e_{ijk}, \ i=\overline{1,3} \ \land \ j=\overline{1,3}\ \land \ k=\overline{1,2}\)</span>, donde:</p>
+<ul>
+<li><p><span class="math inline">\(y_{ijk}\)</span>: tiempo en realizar la prueba de 1.5 millas del <span class="math inline">\(k-ésimo\)</span> corredor con <span class="math inline">\(i\)</span> años de la categoría <span class="math inline">\(j\)</span>.</p></li>
+<li><p><span class="math inline">\(\mu\)</span>: valor de referencia del tiempo en realizar la prueba de 1.5 millas.</p></li>
+<li><p><span class="math inline">\(\tau_i\)</span>: efecto edad <span class="math inline">\(i\)</span>.</p></li>
+<li><p><span class="math inline">\(\beta_j\)</span>: efecto categoría <span class="math inline">\(j\)</span>.</p></li>
+<li><p><span class="math inline">\((\tau \beta)_{ij}\)</span>: efecto interacción entre el edad <span class="math inline">\(i\)</span> y el categoría <span class="math inline">\(j\)</span>.</p></li>
+<li><p><span class="math inline">\(e_{ijk}\)</span>: error aleatorio del <span class="math inline">\(k-ésimo\)</span> corredor con <span class="math inline">\(i\)</span> años de la categoría <span class="math inline">\(j\)</span>.</p></li>
+</ul>
+<p>Además, <span class="math inline">\(e_{ijk} \sim \mathcal{N}(0,\sigma^2)\)</span> <em>e independientes.</em></p>
+<p>En este modelo, a través de la interacción, se postula que el efecto de la edad del corredor en el tiempo que tarda en alcanzar las 1.5 millas depende de su categoría.</p>
+<p>A continuación, se muestra la tabla ANOVA:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Tabla ANOVA</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>anova <span class="ot">&lt;-</span> <span class="fu">aov</span>(tiempo<span class="sc">~</span>edad<span class="sc">*</span>categoria, base_fitness)</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(anova)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>               Df Sum Sq Mean Sq F value   Pr(&gt;F)    
+edad            2 195733   97866  304.99 5.39e-09 ***
+categoria       2 160867   80434  250.66 1.28e-08 ***
+edad:categoria  4  21752    5438   16.95 0.000321 ***
+Residuals       9   2888     321                     
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Modelo estimado</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>modelo <span class="ot">&lt;-</span> <span class="fu">lm</span>(tiempo<span class="sc">~</span>edad<span class="sc">*</span>categoria, base_fitness)</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(modelo)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = tiempo ~ edad * categoria, data = base_fitness)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-25.500  -1.875   0.000   1.875  25.500 
+
+Coefficients:
+                      Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)             537.00      12.67  42.395 1.13e-11 ***
+edad50                   35.00      17.91   1.954  0.08246 .  
+edad60                  163.50      17.91   9.127 7.61e-06 ***
+categoriabaja           133.00      17.91   7.425 4.00e-05 ***
+categoriamedia           65.50      17.91   3.656  0.00526 ** 
+edad50:categoriabaja     93.00      25.33   3.671  0.00515 ** 
+edad60:categoriabaja    201.00      25.33   7.934 2.36e-05 ***
+edad50:categoriamedia    48.00      25.33   1.895  0.09065 .  
+edad60:categoriamedia    60.00      25.33   2.368  0.04202 *  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 17.91 on 9 degrees of freedom
+Multiple R-squared:  0.9924,    Adjusted R-squared:  0.9857 
+F-statistic: 147.4 on 8 and 9 DF,  p-value: 1.257e-08</code></pre>
+</div>
+</div>
+<p>El test de hipótesis para responder al efecto interacción se plantea como: <span class="math inline">\(H_0)\)</span> No hay interacción versus <span class="math inline">\(H_1)\)</span> Hay interacción. Que no haya interacción es que el efecto edad es el mismo para cualquier categoría.</p>
+<p>En base a la evidencia muestral y con un nivel de significación del <span class="math inline">\(5\%\)</span>, se rechaza la hipótesis nula, es decir, hay efecto interacción entre edad y categoría. El efecto de la edad sobre el cambio del tiempo en realizar las 1.5 millas de los corredores depende de la categoría en la que se encuentran.</p>
+<p>Como la interacción del modelo resultó significativa, no se prueban los efectos principales.</p>
+<section id="comparaciones-múltiples" class="level1">
+<h1>Comparaciones múltiples</h1>
+<p>Para comparar los niveles de edad dentro de cada categoría y viceversa, planteamos las siguientes comparaciones:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">joint_tests</span>(modelo, <span class="at">by =</span> <span class="st">"edad"</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>edad = 40:
+ model term df1 df2 F.ratio p.value
+ categoria    2   9  27.565  0.0001
+
+edad = 50:
+ model term df1 df2 F.ratio p.value
+ categoria    2   9  79.586  &lt;.0001
+
+edad = 60:
+ model term df1 df2 F.ratio p.value
+ categoria    2   9 177.401  &lt;.0001</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">joint_tests</span>(modelo, <span class="at">by =</span> <span class="st">"categoria"</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>categoria = alta:
+ model term df1 df2 F.ratio p.value
+ edad         2   9  46.194  &lt;.0001
+
+categoria = baja:
+ model term df1 df2 F.ratio p.value
+ edad         2   9 213.133  &lt;.0001
+
+categoria = media:
+ model term df1 df2 F.ratio p.value
+ edad         2   9  79.551  &lt;.0001</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>emm_s.t <span class="ot">&lt;-</span> <span class="fu">emmeans</span>(modelo, pairwise <span class="sc">~</span> edad <span class="sc">|</span> categoria)</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>emm_s.t</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$emmeans
+categoria = alta:
+ edad emmean   SE df lower.CL upper.CL
+ 40      537 12.7  9      508      566
+ 50      572 12.7  9      543      601
+ 60      700 12.7  9      672      729
+
+categoria = baja:
+ edad emmean   SE df lower.CL upper.CL
+ 40      670 12.7  9      641      699
+ 50      798 12.7  9      769      827
+ 60     1034 12.7  9     1006     1063
+
+categoria = media:
+ edad emmean   SE df lower.CL upper.CL
+ 40      602 12.7  9      574      631
+ 50      686 12.7  9      657      714
+ 60      826 12.7  9      797      855
+
+Confidence level used: 0.95 
+
+$contrasts
+categoria = alta:
+ contrast        estimate   SE df t.ratio p.value
+ edad40 - edad50      -35 17.9  9  -1.954  0.1795
+ edad40 - edad60     -164 17.9  9  -9.127  &lt;.0001
+ edad50 - edad60     -128 17.9  9  -7.173  0.0001
+
+categoria = baja:
+ contrast        estimate   SE df t.ratio p.value
+ edad40 - edad50     -128 17.9  9  -7.146  0.0001
+ edad40 - edad60     -364 17.9  9 -20.348  &lt;.0001
+ edad50 - edad60     -236 17.9  9 -13.202  &lt;.0001
+
+categoria = media:
+ contrast        estimate   SE df t.ratio p.value
+ edad40 - edad50      -83 17.9  9  -4.633  0.0032
+ edad40 - edad60     -224 17.9  9 -12.477  &lt;.0001
+ edad50 - edad60     -140 17.9  9  -7.843  0.0001
+
+P value adjustment: tukey method for comparing a family of 3 estimates </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>emm_s.t1 <span class="ot">&lt;-</span> <span class="fu">emmeans</span>(modelo, pairwise <span class="sc">~</span> categoria <span class="sc">|</span> edad)</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>emm_s.t1</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$emmeans
+edad = 40:
+ categoria emmean   SE df lower.CL upper.CL
+ alta         537 12.7  9      508      566
+ baja         670 12.7  9      641      699
+ media        602 12.7  9      574      631
+
+edad = 50:
+ categoria emmean   SE df lower.CL upper.CL
+ alta         572 12.7  9      543      601
+ baja         798 12.7  9      769      827
+ media        686 12.7  9      657      714
+
+edad = 60:
+ categoria emmean   SE df lower.CL upper.CL
+ alta         700 12.7  9      672      729
+ baja        1034 12.7  9     1006     1063
+ media        826 12.7  9      797      855
+
+Confidence level used: 0.95 
+
+$contrasts
+edad = 40:
+ contrast     estimate   SE df t.ratio p.value
+ alta - baja    -133.0 17.9  9  -7.425  0.0001
+ alta - media    -65.5 17.9  9  -3.656  0.0131
+ baja - media     67.5 17.9  9   3.768  0.0111
+
+edad = 50:
+ contrast     estimate   SE df t.ratio p.value
+ alta - baja    -226.0 17.9  9 -12.616  &lt;.0001
+ alta - media   -113.5 17.9  9  -6.336  0.0004
+ baja - media    112.5 17.9  9   6.280  0.0004
+
+edad = 60:
+ contrast     estimate   SE df t.ratio p.value
+ alta - baja    -334.0 17.9  9 -18.645  &lt;.0001
+ alta - media   -125.5 17.9  9  -7.006  0.0002
+ baja - media    208.5 17.9  9  11.639  &lt;.0001
+
+P value adjustment: tukey method for comparing a family of 3 estimates </code></pre>
+</div>
+</div>
+<p>El análisis se finaliza con la comprobación de los supuestos de normalidad, homocedasticidad e independencia.</p>
+
+
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

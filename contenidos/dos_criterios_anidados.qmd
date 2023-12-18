@@ -1,0 +1,72 @@
+---
+title: "Dos o más criterios de clasificación anidados"
+---
+
+Análisis en el que se desean estudiar dos (o más) **factores tales que los niveles de un factor ocurren sólo en un nivel del otro factor**. Es decir, los niveles de un factor son diferentes para cada uno de los niveles del otro factor. El objetivo es conocer si estos factores influyen en el comportamiento de una **variable (respuesta) continua y gaussiana** a través de un **Análisis de la Variancia** (ANOVA).
+
+Damon y Harvey (1987, p. 26) presentaron datos sobre el aumento de peso de pollos sometidos a cuatro tratamientos de alimentación. Los datos originales fueron proporcionados por el Dr. Donald L. Anderson del Departamento de Veterinaria y Ciencias Animales de la Universidad de Massachusetts. 
+
+El experimento implicó la determinación de las ganancias de peso (en gramos) de 10 a 20 semanas de pollos colocados en cuatro tratamientos de alimentación obtenidos de combinaciones de calcio y lisina altos y bajos. Las determinaciones de peso se realizaron utilizando seis pollos en dos corrales de cada uno de los cuatro tratamientos de alimentación. Se puede considerar que los corrales se encuentran anidados dentro de cada tratamientos. 
+
+```{r}
+# Librerías
+library(readxl)
+library(tidyverse)
+```
+
+```{r}
+pollos <- tibble(
+          peso = c(573,636,883,550,613,901,1041,814,498,890,636,685,
+                   618,926,717,677,659,817,943,640,373,907,734,1050,
+                   731,845,866,729,770,787,416,729,590,552,776,657,
+                   518,782,938,755,672,576,416,729,590,552,776,657),
+          tratamiento = factor(rep(c("LoCaLoL", "LoCaHiL", "HiCaLoL","HiCaHiL"), each = 12)),
+          corral = factor(rep(c("1", "2"), each = 6, times = 4))
+        )
+```
+
+Se realiza un análisis descriptivo para estudiar la relación entre los tratamientos, los corrales y el aumento de peso de los pollos. 
+
+```{r}
+ggplot(pollos, aes(x = corral, y = peso))+
+  geom_point()+
+  facet_wrap(~tratamiento)+
+  theme_bw()
+```
+
+Se plantea el siguiente modelo de efectos fijos: \
+
+$y_{ijk} = \mu + \tau_i + \beta_{j(i)} + e_{ijk}, \ i=\overline{1,4} \ \land \ j=\overline{1,2}\ \land \ k=\overline{1,6}$, donde:
+
+-   $y_{ijk}$: aumento en el peso del $k-ésimo$ pollo sometidos al $i-ésimo$ tratamiento en el corral $j-ésimo$.
+
+-   $\mu$: valor de referencia del aumento en el peso.
+
+-   $\tau_i$: efecto del tratamiento $i$.
+
+-   $\beta_{j(i)}$: efecto del corral $j$ correspondiente al tratamiento $i$.
+
+-   $e_{ijk}$: error aleatorio del $k-ésimo$ pollo sometidos al $i-ésimo$ tratamiento en el corral $j-ésimo$.
+
+Además, $e_{ijk} \sim \mathcal{N}(0,\sigma^2)$ *e independientes.*
+
+En este modelo se postula que los corrales se encuentran anidados a los tratamientos.
+
+La tabla ANOVA del modelo considerado es el siguiente:
+
+```{r}
+# Tabla ANOVA
+anova <- aov(peso ~ tratamiento/corral, pollos)
+summary(anova)
+
+# Modelo estimado
+m1 <- lm(peso ~ tratamiento/corral, pollos)
+summary(m1)
+
+```
+
+En base a la evidencia muestral, con un nivel de significación del 5\%, se concluye que no hay efecto significativo de los corrales sobre el aumento de peso de los pollos. Además, los tratamientos no muestran diferencias significativas en la respuesta estudiada. 
+
+En el caso de que el efecto tratamiento sea significativo, se podría continuar realizando comparaciones múltiples o contrastes. 
+
+El análisis se finaliza con la comprobación de los supuestos de normalidad, homocedasticidad e independencia.
