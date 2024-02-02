@@ -2,6 +2,13 @@
 title: "Dos o más criterios de clasificación cruzados con interacción"
 ---
 
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE, 
+                      comment = NA, fig.align = "center", out.width = "75%")
+```
+
+<div style="text-align: justify">
+
 Análisis en el que se presentan dos **factores de clasificación (con dos o más niveles cada uno)**. El término *cruzado* indica que cada nivel de un factor puede combinarse con cada nivel del otro factor. El objetivo es conocer si estos factores influyen en el comportamiento de una **variable (respuesta) continua y gaussiana** a través de un **Análisis de la Variancia** (ANOVA).
 
 Steel y Torrie (1980, págs. 217-218) informaron datos (cortesía de A.c. Linnerud, Universidad Estatal de Carolina del Norte) sobre los tiempos (en segundos) para completar un recorrido de 1,5 millas. Todos los corredores eran hombres clasificados en tres grupos de edad y en tres categorías de fitness.
@@ -24,6 +31,7 @@ tiempo <- c(669,671,602,603,527,547,775,821,684,687,571,573,1009,1060,824,828,68
 
 base_fitness <- cbind(edad,categoria,tiempo)
 base_fitness <- as.data.frame(base_fitness)
+base_fitness$tiempo <- as.numeric(base_fitness$tiempo)
 ```
 
 ```{r}
@@ -72,7 +80,7 @@ base_fitness %>%
 
 Se puede observar que los tiempos en realizar la prueba de 1.5 millas ...
 
-Se plantea el siguiente modelo de efectos fijos:\
+Se plantea el siguiente modelo de efectos fijos: \
 
 $y_{ijk} = \mu + \tau_i + \beta_j + (\tau \beta)_{ij} + e_{ijk}, \ i=\overline{1,3} \ \land \ j=\overline{1,3}\ \land \ k=\overline{1,2}$, donde:
 
@@ -127,3 +135,5 @@ emm_s.t1
 ```
 
 El análisis se finaliza con la comprobación de los supuestos de normalidad, homocedasticidad e independencia.
+
+<div/>

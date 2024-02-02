@@ -108,13 +108,13 @@ t.test(coord ~ sexo, base, alternative = "greater", var.equal = T)
 
 Se postula el siguiente modelo de efectos fijos: $y_{ij} = \mu + \tau_i + e_{ij}, \ i=\overline{1,2} \ \land \ j=\overline{1,n_i}$, donde:
 
-- $y_{ij}$ resultado del test de coordinación del deportista $j$ del grupo $i$.
+- $y_{ij}:$ resultado del test de coordinación del deportista $j$ del grupo $i$.
 
-- $\mu =$ valor de referencia del test de coordinación.
+- $\mu:$ valor de referencia del test de coordinación.
 
-- $\tau_i =$ efecto grupo $i$.
+- $\tau_i:$ efecto grupo $i$.
 
-- $e_{ij} =$ error aleatorio del deportista $j$ del grupo $i$.
+- $e_{ij}:$ error aleatorio del deportista $j$ del grupo $i$.
 
 Además, $e_{ij} \sim \mathcal{N}(0,\sigma^2)$ *e independientes.*
 

@@ -2,6 +2,13 @@
 title: "Dos o más criterios de clasificación cruzados sin interacción"
 ---
 
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE, 
+                      comment = NA, fig.align = "center", out.width = "75%")
+```
+
+<div style="text-align: justify">
+
 Análisis en el que se presentan dos **factores de clasificación (con dos o más niveles cada uno)**. El término *cruzado* indica que cada nivel de un factor puede combinarse con cada nivel del otro factor. El objetivo es conocer si estos factores influyen en el comportamiento de una **variable (respuesta) continua y gaussiana** a través de un **Análisis de la Variancia** (ANOVA).
 
 Los datos brindados corresponden a una muestra de deportistas federados, de 18 a 22 años de la ciudad de Rosario. Se desea conocer si existen diferencias significativas en el resultado medio del "test de Coordinación en 4 tramos de 10 metros cada tramo" entre los deportistas teniendo en cuenta el deporte en el que compiten y el club en el que se entrenan. 
@@ -102,7 +109,7 @@ summary(modelo)
 
 El test de hipótesis para responder al efecto interacción se plantea como: $H_0)$ No hay interacción versus $H_1)$ Hay interacción. 
 Que no haya interacción es que el efecto deporte es el mismo para cualquier club: $\mu_{11} - \mu_{21} = \mu_{12} - \mu_{22}$, luego la hipótesis en términos de los parámetros resulta:
-$H_0) \mu_{11} - \mu_{21} = \mu_{12} - \mu_{22}$
+$H_0) \ \mu_{11} - \mu_{21} = \mu_{12} - \mu_{22}$
 
 En base a la evidencia muestral y con un nivel de significación del $5\%$, no se rechaza la hipótesis nula, es decir, no hay efecto interacción entre deporte y club. El efecto del deporte sobre el cambio del resultado del test de coordinación de los deportistas no depende del club en el que entrenan.
 
@@ -126,3 +133,5 @@ confint(cm)
 Como era de esperarse, las comparaciones que resultan significatiavas (el intervalo de confianza de los pares comparados no cubre al cero) son las que comparan diferentes deportes.
 
 El análisis se finaliza con la comprobación de los supuestos de normalidad, homocedasticidad e independencia.
+
+<div/>

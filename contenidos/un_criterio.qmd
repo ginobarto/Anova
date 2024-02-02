@@ -2,6 +2,13 @@
 title: "Un criterio de clasificación"
 ---
 
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE, 
+                      comment = NA, fig.align = "center", out.width = "75%")
+```
+
+<div style="text-align: justify">
+
 Análisis comparativo en el que se presenta un **factor de clasificación con dos o más niveles**. Cada nivel se refiere a una población diferente. El objetivo es comparar dichas poblaciones en función de una **variable (respuesta) continua y gaussiana** a través de un **Análisis de la Variancia** (ANOVA).
 
 Los datos brindados corresponden a una muestra de deportistas federados, de 18 a 22 años, que entrenan y compiten en deportes y clubes diferentes de la ciudad de Rosario. Se desea conocer si existen diferencias significativas en el resultado medio del "test de Coordinación en 4 tramos de 10 metros cada tramo" entre los grupos de deportistas. Los cuatro grupos comparados están conformados de la siguiente manera:
@@ -88,7 +95,7 @@ anova <- aov(coord~grupos, base_grupos)
 summary(anova)
 ```
 
-El test de hipótesis para responder al objetivo resulta: $H_0) \tau_a = \tau_b =\tau_c =\tau_d$ versus $H_1) Al \ menos \ un \ \tau_i \neq del \ resto, i=\overline{1,a}$.
+El test de hipótesis para responder al objetivo resulta: $H_0) \ \tau_a = \tau_b =\tau_c =\tau_d$ versus $H_1) Al \ menos \ un \ \tau_i \neq del \ resto, i=\overline{1,a}$.
 
 En base a la evidencia muestral y con un nivel de significación del $5\%$, se rechaza la hipótesis nula, es decir, existen diferencias signficativas en los tiempos que les lleva realizar el test de coordinación en al menos uno de los grupos de deportistas.
 
@@ -96,16 +103,16 @@ En base a la evidencia muestral y con un nivel de significación del $5\%$, se r
 
 El problema sobre la comparación de varios grupos que se resuelve a través del ANOVA es interesante y útil, pero no siempre suficiente. En caso de rechazar la hipótesis nula, se concluirá que no todos los tratamientos tienen los mismos promedios poblacionales pero, seguramente, el investigador querrá saber cuál o cuáles son los promedios diferentes o cuáles son iguales entre sí.
 
-Para conocer entre cuales grupos se presentan las diferencias se utilizará el procedimiento de **Comparaciones múltiples**, el cual tiene como objetivo dar respuesta a las siguientes hipótesis (una vez que se rechazó la igualdad de medias de tratamientos con la prueba F del ANOVA): $H_0) \mu_i = \mu_{i'}$ versus $H_1) \mu_i \neq \mu_{i'}, \ i \neq i' \ \land i,i'=\overline{1,a}$.
+Para conocer entre cuales grupos se presentan las diferencias se utilizará el procedimiento de **Comparaciones múltiples**, el cual tiene como objetivo dar respuesta a las siguientes hipótesis (una vez que se rechazó la igualdad de medias de tratamientos con la prueba F del ANOVA): $H_0) \ \mu_i = \mu_{i'}$ versus $H_1) \mu_i \neq \mu_{i'}, \ i \neq i' \ \land i,i'=\overline{1,a}$.
 
-Se compararán los grupos de deportistas estudiados en la sección 2 de ANOVA para un criterio de clasificación.
+Se compararán los grupos de deportistas estudiados.
 
 ```{r}
 # Librería
 library(agricolae)
 ```
 
-Se ajusta el modelo para los datos tal como se planteó en la sección 2 ($y_{ij} = \mu + \tau_i + e_{ij}, \ i=\overline{1,a} \ \land \ j=\overline{1,n_i}$).
+Se ajusta el modelo para los datos tal como se planteó anteriormente ($y_{ij} = \mu + \tau_i + e_{ij}, \ i=\overline{1,a} \ \land \ j=\overline{1,n_i}$).
 
 ```{r}
 modelo <- lm(coord~grupos, base_grupos)
@@ -144,7 +151,7 @@ Para cualquiera de los métodos presentados, se concluye que con un nivel de sig
 
 La validez de las inferencias extraídas a partir del modelo y su correspondiente ANOVA, las pruebas de hipótesis y los intervalos de confianza, se basan en el cumplimiento de los supuestos postulados. Si el modelo es de efectos fijos, se postula el supuesto de independencia, normalidad e igualdad de variancias para los errores aleatorios.
 
-Como los errores del modelo son desconocidos, la verificación de los mismos se realiza sobre una estimación de esos errores, los que habitualmente denominamos residuos. Se utilizarán los **residuos ordinarios** ($\hat e_{ij} = y_{ij}-\bar y_{i.}$) y los **residuos estandarizados** ($w_{ij} = \frac{\hat e_{ij}}{\sqrt{CME}}$).
+Como los errores del modelo son desconocidos, la verificación de los mismos se realiza sobre una estimación de esos errores, habitualmente denominamos residuos. Se utilizarán los **residuos ordinarios** ($\hat e_{ij} = y_{ij}-\bar y_{i.}$) y los **residuos estandarizados** ($w_{ij} = \frac{\hat e_{ij}}{\sqrt{CME}}$).
 
 ```{r}
 # Residuos ordinarios y estandarizados
@@ -201,3 +208,5 @@ Para nuestro ejemplo, se cumplen los supuestos de normalidad y homocedasticidad.
 
 # Base deportistas.xlsx
 En [este link](https://github.com/florcolombo/Anova/blob/main/base_deportistas.xlsx) encontrarás la base de datos utilizada para los ejemplos mostrados.
+
+<div/>

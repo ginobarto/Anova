@@ -2,6 +2,13 @@
 title: "Dos o más criterios de clasificación anidados"
 ---
 
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE, 
+                      comment = NA, fig.align = "center", out.width = "75%")
+```
+
+<div style="text-align: justify">
+
 Análisis en el que se desean estudiar dos (o más) **factores tales que los niveles de un factor ocurren sólo en un nivel del otro factor**. Es decir, los niveles de un factor son diferentes para cada uno de los niveles del otro factor. El objetivo es conocer si estos factores influyen en el comportamiento de una **variable (respuesta) continua y gaussiana** a través de un **Análisis de la Variancia** (ANOVA).
 
 Damon y Harvey (1987, p. 26) presentaron datos sobre el aumento de peso de pollos sometidos a cuatro tratamientos de alimentación. Los datos originales fueron proporcionados por el Dr. Donald L. Anderson del Departamento de Veterinaria y Ciencias Animales de la Universidad de Massachusetts. 
@@ -70,3 +77,5 @@ En base a la evidencia muestral, con un nivel de significación del 5\%, se conc
 En el caso de que el efecto tratamiento sea significativo, se podría continuar realizando comparaciones múltiples o contrastes. 
 
 El análisis se finaliza con la comprobación de los supuestos de normalidad, homocedasticidad e independencia.
+
+<div/>
